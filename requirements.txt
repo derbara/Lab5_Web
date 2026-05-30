@@ -1,0 +1,18 @@
+Flask==3.0.0
+Flask-Login==0.6.3
+mysql-connector-python==8.2.0
+
+
+DELIMITER $$
+
+CREATE TRIGGER prevent_admin_deletion
+BEFORE DELETE ON users
+FOR EACH ROW
+BEGIN
+    IF OLD.login = 'User123!' THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Нельзя удалить администратора Петрова Петра Ивановича!';
+    END IF;
+END$$
+
+DELIMITER ;
