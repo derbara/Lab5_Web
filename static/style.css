@@ -1,0 +1,27 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.navbar-brand {
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+}
+
+.card {
+    border: none;
+    border-radius: 0.5rem;
+}
+
+.table th {
+    font-weight: 600;
+}
+
+.btn-group .btn {
+    border-radius: 0.25rem !important;
+    margin-right: 2px;
+}
+
+.badge {
+    font-size: 0.8em;
+    padding: 0.4em 0.7em;
+}
