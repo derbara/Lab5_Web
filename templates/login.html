@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Вход в систему{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5 col-lg-4">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h4 class="card-title text-center mb-4">
+                    <i class="bi bi-person-lock text-primary me-2"></i>Вход
+                </h4>
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Логин</label>
+                        <input type="text" name="login" class="form-control" required autofocus>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Пароль</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-box-arrow-in-right me-1"></i>Войти
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

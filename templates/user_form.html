@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Создание' if mode == 'create' else 'Редактирование' }} пользователя{% endblock %}
+
+{% macro render_field(label, name, type='text', required=False, value='', errors={}) %}
+<div class="mb-3">
+    <label class="form-label">
+        {{ label }}{% if required %} <span class="text-danger">*</span>{% endif %}
+    </label>
+    <input
+        type="{{ type }}"
+        name="{{ name }}"
+        id="{{ name }}"
+        class="form-control {% if errors.get(name) %}is-invalid{% endif %}"
+        {% if required %}required{% endif %}
+        value="{{ value }}"
+    >
+    {% if errors.get(name) %}
+        <div class="invalid-feedback">{{ errors[name] }}</div>
+    {% endif %}
+</div>
+{% endmacro %}
+<!--для создания выпадающих списков-->
+{% macro render_select(label, name, options, selected='', errors={}) %} 
+<div class="mb-3">
+    <label class="form-label">{{ label }}</label>
+    <select name="{{ name }}" id="{{ name }}"
+            class="form-select {% if errors.get(name) %}is-invalid{% endif %}">
+        <option value="">— Без роли —</option>
+        {% for opt in options %}
+            <option value="{{ opt.id }}" {% if selected|string == opt.id|string %}selected{% endif %}>
+                {{ opt.name }}
+            </option>
+        {% endfor %}
+    </select>
+    {% if errors.get(name) %}
+        <div class="invalid-feedback">{{ errors[name] }}</div>
+    {% endif %}
+</div>
+{% endmacro %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">
+        <i class="bi bi-{{ 'person-plus' if mode == 'create' else 'pencil-square' }} me-2 text-primary"></i>
+        {{ 'Создание' if mode == 'create' else 'Редактирование' }} пользователя
+    </h1>
+    <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left me-1"></i>Назад
+    </a>
+</div>
+<!---->
+
+<div class="card shadow-sm" style="max-width: 600px;">
+    <div class="card-body">
+        <form method="POST" novalidate>
+            {% if mode == 'create' %}
+                {{ render_field('Логин', 'login', required=True, value=form_data.get('login', ''), errors=errors) }}
+                {{ render_field('Пароль', 'password', type='password', required=True, errors=errors) }}
+            {% endif %}
+
+            {{ render_field('Фамилия', 'last_name', value=form_data.get('last_name', ''), errors=errors) }}
+            {{ render_field('Имя', 'first_name', required=True, value=form_data.get('first_name', ''), errors=errors) }}
+            {{ render_field('Отчество', 'middle_name', value=form_data.get('middle_name', ''), errors=errors) }}
+            
+            {% if current_user.role_name == 'Администратор' %}
+                {{ render_select('Роль', 'role_id', roles, selected=form_data.get('role_id', ''), errors=errors) }}
+            {% else %}
+                <div class="mb-3">
+                    <label class="form-label">Роль</label>
+                    <input type="text" class="form-control"
+                           value="{{ form_data.get('role_name', form_data.get('role_id', '—')) }}"
+                           disabled>
+                </div>
+            {% endif %}
+            
+            {% if mode == 'create' %}
+            <div class="mb-3">
+                <small class="text-muted">
+                    <strong>Требования к паролю:</strong> 8–128 символов, латинские или кириллические буквы,
+                    хотя бы одна заглавная и строчная буква, одна цифра, без пробелов.
+                </small>
+            </div>
+            {% endif %}
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-floppy me-1"></i>Сохранить
+                </button>
+                <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">Отмена</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+<!--<div class="mb-3">
+    <label class="form-label">Логин</label>
+    <input type="text" name="login" class="form-control" value="">
+</div>-->
